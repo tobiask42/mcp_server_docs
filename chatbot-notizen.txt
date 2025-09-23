@@ -3,6 +3,9 @@
 - Chunking über einfache Pythoninterne Funktionen
 - Frage an Chat-GPT nach Vektordatenbanke -> ChromaDB
 - Orientierung an Doku, Bessere Strukturierung von eigenem Code durch Chatbotunterstützung
+- mcp-Umsetzung durch mix aus Chatbot und Doku
+- Eigener Chatbot komplett KI-Generiert
+- Der Prototyp wurde mit der FastAPI Dokumentation getestet
 
 ✅ Chunking ready for RAG – Checkliste
 
