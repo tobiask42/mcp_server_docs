@@ -1,7 +1,7 @@
 from mcp.server.fastmcp import FastMCP
 from loguru import logger
 from server.job_manager import JobManager
-from server.blocking_tasks import chunk_blocking, ingest_blocking, ask_blocking
+from server.blocking_tasks import chunk_blocking, ingest_blocking, ask_blocking, crawl_blocking
 from typing import Any
 import sys
 from pathlib import Path
@@ -48,6 +48,7 @@ async def start_ingest() -> dict[str,Any]:
 async def start_pipeline() -> dict[str,Any]:
     # Einfach: mehrere Jobs nacheinander in EINEM Thread-Job
     def pipeline(*, log_path: Path):
+        crawl_blocking(log_path=log_path)
         chunk_blocking()  # wenn Crawl separat als eigener Job läuft
         ingest_blocking()
     jid = jobman.submit("pipeline", pipeline)
