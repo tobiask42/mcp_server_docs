@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8">
+<title>Docs RAG Chat</title>
+<style>body{font:16px system-ui;margin:2rem} .msg{margin:.5rem 0} .you{color:#444} .bot{background:#f6f6f8;padding:.5rem;border-radius:.5rem}</style>
+<input id="q" placeholder="Frage..." style="width:70%"><button onclick="ask()">Senden</button>
+<div id="chat"></div>
+<script>
+async function ask(){
+  const q = document.getElementById('q').value.trim();
+  if(!q) return;
+  append('you', q);
+  document.getElementById('q').value = '';
+  try{
+    const res = await fetch('/chat/ask', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({question:q, timeout_s: 90})});
+    if(!res.ok){ append('bot', 'Fehler: '+res.status); return; }
+    const data = await res.json(); // {answer, sources}
+    append('bot', data.answer + renderSources(data.sources));
+  }catch(e){ append('bot','Netzwerkfehler'); }
+}
+function append(cls, text){ const d=document.createElement('div'); d.className='msg '+cls; d.innerText=text; document.getElementById('chat').appendChild(d); }
+function renderSources(s){ if(!s||!s.length) return ''; return '\n\nQuellen:\n' + s.map((x,i)=>`[${i+1}] ${x.url}`).join('\n'); }
+</script>

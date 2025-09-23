@@ -34,6 +34,7 @@ uv pip install pydantic-settings
 uv pip install "pydantic[email]"
 uv pip install chromadb
 uv pip install mcp
+uv pip install fastapi
 ```
 ## Konfiguration
 Erstelle eine `.env`-Datei im Projektverzeichnis oder setze die Variablen als Environment Variablen.
@@ -94,6 +95,8 @@ Mithilfe der job_id kann man über `job_status` den aktuellen Status und `job_lo
 Die Antwort erhält man wenn man `job_result` mit der job_id aufruft.
 
 Damit erhältst du einen **RAG-Workflow**, der Inhalte aus den angegebenen Webseiten crawlt, chunked, in eine Datenbank schreibt und anschließend für Fragen/Antworten in der Kommandozeile bereitstellt.
+## Nutzung des Chatbots
+Sobald die Vektordatenbank gefüllt wurde kann über `uvicorn chatbot.chat_api:app --reload` ein einfacher Chatbot geöffnet werden. Voraussetzung dafür ist dass der mcp-Server läuft.
 ## Status
 Dies ist ein Prototyp - Konfiguration und Funktionsumfang können sich ändern.
 
