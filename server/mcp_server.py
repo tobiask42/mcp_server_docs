@@ -6,7 +6,7 @@ from typing import Any
 import sys
 from pathlib import Path
 from config.settings import get_settings, AppSettings
-import logging, warnings
+import logging
 
 custom_settings: AppSettings = get_settings()
 
