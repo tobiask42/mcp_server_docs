@@ -41,6 +41,8 @@ def answer_question(
     max_per_url: int = custom_settings.RAG_MAX_CHUNKS_PER_URL,
     num_ctx: int = custom_settings.OLLAMA_CONTEXT_WINDOW_TOKENS,
     max_tokens: int = custom_settings.OLLAMA_MAX_TOKENS,
+    *,
+    temperature: float = custom_settings.OLLAMA_TEMPERATURE
 ) -> Tuple[str, list[CtxItem]]:
     """
     Führt Retrieval -> Postprocessing -> LLM-Aufruf aus und gibt (Antwort, verwendete Kontexte) zurück.
@@ -57,7 +59,7 @@ def answer_question(
         user_prompt=user_prompt,
         system_prompt=SYSTEM_PROMPT,
         model=model,
-        temperature=custom_settings.OLLAMA_TEMPERATURE,
+        temperature=temperature,
         num_ctx=num_ctx,
         max_tokens=max_tokens,
     )
