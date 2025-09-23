@@ -1,6 +1,10 @@
 # MCP Server Docs
 
-Dieses Projekt ist ein Prototyp für einen RAG-Workflow (Retrieval-Augmented Generation) basierend auf Daten, die aus Webseiten gecrawlt werden.  
+Dieses Projekt ist ein Prototyp, der im Rahmen einer Take-Home-Challenge entwickelt wurde.  
+Ziel ist es, einen **MCP-Server** bereitzustellen, der technische Dokumentationen automatisch crawlt, in handliche Chunks zerlegt, in einer Vektordatenbank speichert und über **Retrieval-Augmented Generation (RAG)** für Fragen und Antworten verfügbar macht.  
+So können MCP-Clients (z. B. GitHub Copilot Chat) oder ein einfacher Web-Chatbot auf die Inhalte zugreifen.
+
+---
 
 ## Voraussetzungen
 
@@ -26,15 +30,7 @@ source mcp-env-uv/bin/activate   # Linux/Mac
 mcp-env-uv\Scripts\activate      # Windows
 
 # Abhängigkeiten installieren
-uv pip install scrapy
-uv pip install loguru
-uv pip install beautifulsoup4
-uv pip install pydantic
-uv pip install pydantic-settings
-uv pip install "pydantic[email]"
-uv pip install chromadb
-uv pip install mcp
-uv pip install fastapi
+uv pip install scrapy loguru beautifulsoup4 pydantic pydantic-settings "pydantic[email]" chromadb mcp fastapi
 ```
 ## Konfiguration
 Erstelle eine `.env`-Datei im Projektverzeichnis oder setze die Variablen als Environment Variablen.
@@ -82,21 +78,53 @@ python chunker_main.py
 python db_creation_main.py
 python rag_main.py
 ```
-Um den mcp-Server zu starten kann `uv run mcp dev mcp_main.py` aufgerufen werden. Im MCP Inspector kann eine Verbindung über "Connect" hergestellt werden und unter Tools -> List Tools finden sich die folgenden Tools:
-`start_crawl`: Das Webscraping wird ausgeführt
-`start_chunk`: Das Chunking wird ausgeführt
-`start_ingest`: Die Vektordatenbank wird befüllt
-`start_pipeline`: Alle Schritte werden nacheinander ausgeführt.
-`ask_job`: Ein Prompt wird beantwortet, die job_id wird zurückgegeben.
+## MCP Server
+Starte den MCP-Server
+```bash
+uv run mcp dev mcp_main.py
+```
+Im MCP Inspector kann eine Verbindung über "Connect" hergestellt werden.
+Unter Tools → List Tools stehen die folgenden Tools bereit:
 
-``
-Dabei starten die Tools jeweils Jobs.
-Mithilfe der job_id kann man über `job_status` den aktuellen Status und `job_log_tail` das Log aufrufen. Zudem werden alle Daten auch in der `mcp_server.log`-Datei gespeichert.
-Die Antwort erhält man wenn man `job_result` mit der job_id aufruft.
+- `start_crawl`: Startet das Webscraping
 
-Damit erhältst du einen **RAG-Workflow**, der Inhalte aus den angegebenen Webseiten crawlt, chunked, in eine Datenbank schreibt und anschließend für Fragen/Antworten in der Kommandozeile bereitstellt.
+- `start_chunk`: Führt das Chunking aus
+
+- `start_ingest`: Befüllt die Vektordatenbank
+
+- `start_pipeline`: Führt alle Schritte nacheinander aus
+
+- `ask_job`: Beantwortet eine Frage, gibt job_id zurück
+
+- `job_status`: Status des Jobs abfragen (queued, running, success, error)
+
+- `job_log_tail`: Fortschritt/Logs eines Jobs ansehen
+
+- `job_result`: Ergebnis eines Jobs abrufen (inkl. Antwort und Quellen)
+
+## Beispielablauf mit MCP Inspector
+1.  `start_pipeline` → gibt `{"job_id": "…"}` zurück
+
+2.  `job_status <job_id>` → zeigt `running` / `success`
+
+3.  `job_log_tail <job_id>` → zeigt den Fortschritt im Log
+
+4.  `job_result <job_id>` → gibt die Antwort des RAG zurück
+## Logs
+- Server-Logs: `mcp_server.log`
+- Pro-Job-Logs: `./job_logs/job_<name>_<id>.log`<br>
+→ verhindert, dass der MCP Inspector einfriert, und erlaubt Debugging pro Job.
 ## Nutzung des Chatbots
-Sobald die Vektordatenbank gefüllt wurde kann über `uvicorn chatbot.chat_api:app --reload` ein einfacher Chatbot geöffnet werden. Voraussetzung dafür ist dass der mcp-Server läuft.
+Sobald die Vektordatenbank gefüllt wurde, kann ein einfacher Chatbot geöffnet werden:
+```bash
+uvicorn chatbot.chat_api:app --reload
+```
+Der Chatbot benötigt die Vektordatenbank und Ollama, aber nicht den MCP-Server.<br>
+Die Weboberfläche steht unter http://127.0.0.1:8000
+## Nächste Schritte
+- Antworten als Streaming im MCP Inspector anzeigen
+- Automatisiertes Re-Crawling & Re-Ingest (Scheduler)
+- Evaluation/Ranking der Antworten verbessern
 ## Status
 Dies ist ein Prototyp - Konfiguration und Funktionsumfang können sich ändern.
 
