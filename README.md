@@ -33,6 +33,7 @@ uv pip install pydantic
 uv pip install pydantic-settings
 uv pip install "pydantic[email]"
 uv pip install chromadb
+uv pip install mcp
 ```
 ## Konfiguration
 Erstelle eine `.env`-Datei im Projektverzeichnis oder setze die Variablen als Environment Variablen.
@@ -80,6 +81,18 @@ python chunker_main.py
 python db_creation_main.py
 python rag_main.py
 ```
+Um den mcp-Server zu starten kann `uv run mcp dev mcp_main.py` aufgerufen werden. Im MCP Inspector kann eine Verbindung über "Connect" hergestellt werden und unter Tools -> List Tools finden sich die folgenden Tools:
+`start_crawl`: Das Webscraping wird ausgeführt
+`start_chunk`: Das Chunking wird ausgeführt
+`start_ingest`: Die Vektordatenbank wird befüllt
+`start_pipeline`: Alle Schritte werden nacheinander ausgeführt.
+`ask_job`: Ein Prompt wird beantwortet, die job_id wird zurückgegeben.
+
+``
+Dabei starten die Tools jeweils Jobs.
+Mithilfe der job_id kann man über `job_status` den aktuellen Status und `job_log_tail` das Log aufrufen. Zudem werden alle Daten auch in der `mcp_server.log`-Datei gespeichert.
+Die Antwort erhält man wenn man `job_result` mit der job_id aufruft.
+
 Damit erhältst du einen **RAG-Workflow**, der Inhalte aus den angegebenen Webseiten crawlt, chunked, in eine Datenbank schreibt und anschließend für Fragen/Antworten in der Kommandozeile bereitstellt.
 ## Status
 Dies ist ein Prototyp - Konfiguration und Funktionsumfang können sich ändern.
