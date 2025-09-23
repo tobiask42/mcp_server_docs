@@ -1,0 +1,239 @@
+- Frage an Chat-GPT nach Möglichkeiten Webcrawling durchzuführen -> Scrapy
+- Teils Nutzung von Chatbot für Implementierung
+- Chunking über einfache Pythoninterne Funktionen
+- Frage an Chat-GPT nach Vektordatenbanke -> ChromaDB
+- Orientierung an Doku, Bessere Strukturierung von eigenem Code durch Chatbotunterstützung
+
+✅ Chunking ready for RAG – Checkliste
+
+Zeichen/Tokens im Blick
+
+Zielgröße: ~200–400 Tokens (≈ 800–1600 Zeichen).
+
+Sicherstellen, dass kein Chunk länger ist als das Tokenlimit des Embedding-Modells (MiniLM: 512, BGE/E5: 1024).
+
+Overlap
+
+10–20 % Überlappung einbauen, um Übergänge nicht zu verlieren.
+
+Besonders nützlich bei Fließtext + Code-Beispielen.
+
+Codeblöcke schützen
+
+Fenced Code („…“) als unteilbare Einheiten behandeln.
+
+Bei sehr langen Codeblöcken → separater Chunk + kurzer Kontext davor.
+
+Heading-basierte Splits
+
+Split nach H2–H5 statt nur H2.
+
+Heading-Pfad (H1 → H2 → H3 …) als Metadatum abspeichern.
+
+Boilerplate entfernen
+
+Navigation, Footer, „Skip to content“, „Edit on GitHub“ rausfiltern.
+
+Stabile IDs
+
+Chunk-ID deterministisch: (url + heading + chunk_index).
+
+Keine Längenabhängigkeit, damit Re-Crawls stabil bleiben.
+
+Metadaten speichern
+
+Immer mitgeben: URL, Titel, heading-Pfad, chunk_index, n_chars, crawl_timestamp.
+
+So kannst du später zitieren, filtern und Debugging betreiben.
+
+Diversität sichern
+
+Beim Kontextaufbau nicht nur Chunks von derselben Seite nehmen.
+
+Maximal n Chunks pro URL im finalen Prompt.
+
+Eval-Set vorbereiten
+
+30–40 Fragen definieren, erwartete Seiten/Abschnitte notieren.
+
+Chunking-Varianten gegeneinander testen (Recall@k, nDCG).
+
+Dokumentieren
+
+In der Abgabe explizit auf Chunking-Parameter eingehen (z. B. „1000 Zeichen, 100 Overlap“).
+
+Trade-offs benennen: Indexgröße vs. Kontexttreue.
+
+📋 FastAPI Eval-Fragen (35 Stück)
+Grundlagen (5)
+
+Wie definiere ich meinen ersten FastAPI-Endpoint mit @app.get?
+
+Wie starte ich einen FastAPI-Server mit uvicorn?
+
+Wie dokumentiert FastAPI automatisch meine API (Swagger UI)?
+
+Was ist der Unterschied zwischen @app.get und @app.post?
+
+Wie gebe ich eine einfache JSON-Antwort zurück?
+
+Path & Query Parameters (5)
+
+Wie definiere ich Path-Parameter mit Typkonvertierung?
+
+Wie setze ich Default-Werte für Query-Parameter?
+
+Wie validiere ich Query-Parameter mit regulären Ausdrücken?
+
+Wie nutze ich Path() und Query() für zusätzliche Metadaten?
+
+Wie gebe ich optionale Query-Parameter an?
+
+Request Body & Pydantic Models (5)
+
+Wie erstelle ich ein Request-Model mit Pydantic?
+
+Wie definiere ich optionale Felder in einem Model?
+
+Wie nutze ich verschachtelte Models (nested models)?
+
+Wie validiere ich Listen-Felder (list[str])?
+
+Wie überschreibe ich Standardwerte in Pydantic-Feldern?
+
+Response Handling (4)
+
+Wie setze ich den HTTP-Statuscode einer Antwort?
+
+Wie definiere ich ein response_model?
+
+Wie filtere ich Felder im response_model (exclude, include)?
+
+Wie sende ich eine StreamingResponse zurück?
+
+Dependencies (4)
+
+Wie definiere ich eine Dependency mit Depends()?
+
+Wie gebe ich eine Datenbank-Session als Dependency weiter?
+
+Wie nutze ich Sub-Dependencies?
+
+Wie validiere ich einen API-Key per Dependency?
+
+Error Handling & Exceptions (3)
+
+Wie werfe ich eine HTTPException mit Statuscode und Detail?
+
+Wie definiere ich einen globalen Exception Handler?
+
+Wie überschreibe ich die Validation Errors von Pydantic?
+
+Advanced Features (5)
+
+Wie setze ich Background Tasks mit BackgroundTasks ein?
+
+Wie implementiere ich WebSockets in FastAPI?
+
+Wie füge ich Middleware hinzu (z. B. Logging oder CORS)?
+
+Wie konfiguriere ich CORS-Einstellungen?
+
+Wie nutze ich Depends für Security (OAuth2, JWT)?
+
+Deployment & Performance (4)
+
+Wie starte ich FastAPI im Produktionsmodus mit Uvicorn/Gunicorn?
+
+Wie aktiviere ich Autoreload im Entwicklungsmodus?
+
+Wie skaliere ich FastAPI-Apps mit mehreren Prozessen/Workern?
+
+Wie nutze ich FastAPI mit Docker?
+
+📋 FastAPI Eval Questions (English, 35)
+Basics (5)
+
+How do I define my first FastAPI endpoint with @app.get?
+
+How do I start a FastAPI server with uvicorn?
+
+How does FastAPI automatically document my API (Swagger UI)?
+
+What is the difference between @app.get and @app.post?
+
+How do I return a simple JSON response?
+
+Path & Query Parameters (5)
+
+How do I define path parameters with type conversion?
+
+How do I set default values for query parameters?
+
+How do I validate query parameters with regular expressions?
+
+How do I use Path() and Query() for additional metadata?
+
+How do I declare optional query parameters?
+
+Request Body & Pydantic Models (5)
+
+How do I create a request model with Pydantic?
+
+How do I define optional fields in a model?
+
+How do I use nested Pydantic models?
+
+How do I validate list fields (e.g., list[str])?
+
+How do I override default values in Pydantic fields?
+
+Response Handling (4)
+
+How do I set the HTTP status code of a response?
+
+How do I define a response_model?
+
+How do I filter fields in a response_model (exclude, include)?
+
+How do I return a StreamingResponse?
+
+Dependencies (4)
+
+How do I define a dependency with Depends()?
+
+How do I provide a database session as a dependency?
+
+How do I use sub-dependencies?
+
+How do I validate an API key using a dependency?
+
+Error Handling & Exceptions (3)
+
+How do I raise an HTTPException with status code and detail?
+
+How do I define a global exception handler?
+
+How do I override Pydantic’s validation errors?
+
+Advanced Features (5)
+
+How do I use background tasks with BackgroundTasks?
+
+How do I implement WebSockets in FastAPI?
+
+How do I add middleware (e.g., logging or CORS)?
+
+How do I configure CORS settings?
+
+How do I use Depends for security (OAuth2, JWT)?
+
+Deployment & Performance (4)
+
+How do I run FastAPI in production with Uvicorn/Gunicorn?
+
+How do I enable autoreload in development mode?
+
+How do I scale FastAPI apps with multiple processes/workers?
+
+How do I use FastAPI with Docker?
