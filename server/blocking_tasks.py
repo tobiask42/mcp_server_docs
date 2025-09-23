@@ -7,6 +7,7 @@ from vector_database.create_chromadb import ingest_chunks_to_chroma
 from definitions.custom_enums import CtxKeys
 from rag.qa import answer_question
 from typing import Any
+import sys, subprocess
 
 # --- Blocking-Funktionen als Callables ---
 
@@ -50,6 +51,11 @@ def ask_blocking(*, log_path: Path, question: str, overrides: dict[str,Any]) -> 
     return {"answer": ans, "sources": sources}
 
 def pipeline_blocking(*,log_path:Path) -> None:
-    crawl_blocking(log_path=log_path)
+     # 1) Crawl als Subprozess – stdout/stderr in dasselbe Job-Log
+    with log_path.open("a", encoding="utf-8", errors="ignore") as lf:
+        rc = subprocess.call([sys.executable, "-u", "scraper_main.py"], stdout=lf, stderr=lf)
+    if rc != 0:
+        raise RuntimeError(f"crawl subprocess exit code {rc}")
+    # 2) Chunking & Ingest
     chunk_blocking()
     ingest_blocking()

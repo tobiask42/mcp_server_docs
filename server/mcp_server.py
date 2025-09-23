@@ -6,6 +6,7 @@ from typing import Any
 import sys
 from pathlib import Path
 from config.settings import get_settings, AppSettings
+import logging, warnings
 
 custom_settings: AppSettings = get_settings()
 
@@ -14,6 +15,28 @@ custom_settings: AppSettings = get_settings()
 logger.remove()
 logger.add("mcp_server.log", rotation="10 MB", level="INFO", backtrace=False, diagnose=False)
 logger.add(sys.stderr, level="WARNING", backtrace=False, diagnose=False)
+
+# stdlib-Logger: alle bisherigen Handler entfernen
+for h in list(logging.root.handlers):
+    logging.root.removeHandler(h)
+    
+
+# in Datei loggen
+fh = logging.FileHandler("mcp_server_stdlib.log", encoding="utf-8")
+fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
+logging.root.addHandler(fh)
+logging.root.setLevel(logging.WARNING)
+
+# Lärmquellen runterdrehen
+logging.getLogger("scrapy").setLevel(logging.ERROR)
+logging.getLogger("twisted").setLevel(logging.ERROR)
+logging.getLogger("urllib3").setLevel(logging.ERROR)
+logging.getLogger("chromadb").setLevel(logging.ERROR)
+logging.getLogger("httpx").setLevel(logging.ERROR)
+logging.getLogger("asyncio").setLevel(logging.ERROR)
+
+# Python-Warnings ins logging umleiten (statt STDERR)
+logging.captureWarnings(True)
 
 mcp = FastMCP("Doc RAG")
 jobman = JobManager(max_workers=3, logs_dir=Path("./job_logs"))
