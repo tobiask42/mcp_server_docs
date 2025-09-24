@@ -56,7 +56,7 @@
       d.appendChild(ul);
     }
 
-    chatEl.appendChild(d);
+    chatEl.insertBefore(d, chatEl.firstChild);
 
     // Syntax-Highlighting
     if (window.hljs){
@@ -67,7 +67,7 @@
     enhanceCodeBlocks(d);
 
     // Auto-Scroll
-    chatEl.scrollTop = chatEl.scrollHeight;
+    chatEl.scrollTop = 0;
   }
 
   function enhanceCodeBlocks(rootEl){
