@@ -49,7 +49,7 @@ class DocsSpider(SitemapSpider):
     def crawl(self) -> ExitCode:
         try:
             # Achtung: Dieser Weg ist nur ok, wenn im Main-Thread!
-            process = CrawlerProcess(settings={"LOG_LEVEL": "INFO"})
+            process = CrawlerProcess(settings={"LOG_LEVEL": custom_settings.CRAWLER_LOG_LEVEL})
             process.crawl(DocsSpider)
             process.start()  # blockiert
             return ExitCode.SUCCESS
