@@ -31,6 +31,7 @@ class DocsSpider(SitemapSpider):
         settings.set("CONCURRENT_REQUESTS", custom_settings.SPIDER_CONCURRENT_REQUESTS, priority=prio)
         settings.set("HTTPCACHE_ENABLED", custom_settings.SPIDER_HTTPCACHE_ENABLED, priority=prio)
         settings.set("USER_AGENT", f"org-docs-crawler/1.0 (+{custom_settings.EMAIL})", priority=prio)
+        settings.set("ROBOTSTXT_OBEY", True, priority=prio)
 
         # FEEDS sicher setzen
         now = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
@@ -44,6 +45,7 @@ class DocsSpider(SitemapSpider):
         title = (response.css("h1::text").get() or "").strip()
         if not title and text:
             title = text.split("\n", 1)[0].lstrip("# ").strip()
+        logger.info(f"Crawled {response.url} with title: {title}")
         yield PageItem(url=response.url, title=title, text=text)
 
     def crawl(self) -> ExitCode:
