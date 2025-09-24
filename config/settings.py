@@ -16,6 +16,9 @@ class AppSettings(BaseSettings):
     CHUNK_MAX_CHARS: int = 1000
     CHUNK_OVERLAP: int = 100
 
+    SECTION_UNKNOWN: str = "unknown"
+    SECTION_CATEGORIES: list[str] = ["tutorial", "advanced", "reference", "alternatives", "deployment", "benchmarks"]
+
     RAG_MAX_CONTEXT_CHARS: int = 5000
     RAG_MAX_CHUNKS_PER_URL: int = 1
 

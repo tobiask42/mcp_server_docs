@@ -1,17 +1,16 @@
 # The processing logic was programmed with AI support
 from __future__ import annotations
 
-import json, re, hashlib, os
+import json, re, hashlib
 from pathlib import Path
 from typing import Dict, Any, List, Final, Tuple  # <- Tuple ergänzt
-from definitions.custom_enums import EnvironmentKeys
 from definitions import constants
 from loguru import logger
 from config.settings import get_settings
 custom_settings = get_settings()
 
-MAX_CHARS: Final[int] = int(os.getenv(EnvironmentKeys.CHUNK_MAX_CHARS, custom_settings.CHUNK_MAX_CHARS))
-OVERLAP_CHARS: Final[int] = int(os.getenv(EnvironmentKeys.CHUNK_OVERLAP, custom_settings.CHUNK_OVERLAP))
+MAX_CHARS: Final[int] = custom_settings.CHUNK_MAX_CHARS
+OVERLAP_CHARS: Final[int] = custom_settings.CHUNK_OVERLAP
 
 DEFAULT_IN_DIR = Path(constants.FEED_PATH)
 DEFAULT_OUT_DIR = Path(constants.CHUNK_PATH)
@@ -48,9 +47,9 @@ def _extract_page_meta(md: str, url_fallback: str) -> tuple[str, str, str]:
             elif k == "SECTION" and val:
                 section = val
         md = md[m.end():]
-    if section == "unknown":
+    if section == custom_settings.SECTION_UNKNOWN:
         path = (url_fallback or "").lower()
-        for key in ("tutorial","advanced","reference","alternatives","deployment","benchmarks"):
+        for key in tuple(custom_settings.SECTION_CATEGORIES):
             if f"/{key}/" in path:
                 section = key
                 break

@@ -49,6 +49,11 @@ CHROMA_BATCH_SIZE=1000
 CHUNK_MAX_CHARS=1000
 CHUNK_OVERLAP=100
 
+# Werte für unbekannte Sections und Sections der Website, die nach Bedarf angepasst werden können.
+SECTION_UNKNOWN=unknown
+SECTION_CATEGORIES=["tutorial", "advanced", "reference", "alternatives", "deployment", "benchmarks"]
+
+
 RAG_MAX_CONTEXT_CHARS=5000
 RAG_MAX_CHUNKS_PER_URL=1
 
