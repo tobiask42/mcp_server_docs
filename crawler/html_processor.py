@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 from bs4.element import NavigableString
 from urllib.parse import urlparse
 import re
+from config.settings import get_settings
+
+custom_settings = get_settings()
 
 # ---------- Hilfsfunktionen ----------
 
@@ -19,12 +22,12 @@ def _slugify(text: str) -> str:
 
 def _infer_section_from_url(url: str | None) -> str:
     if not url:
-        return "unknown"
+        return custom_settings.SECTION_UNKNOWN
     path = urlparse(url).path.lower()
-    for key in ("tutorial", "advanced", "reference", "alternatives", "deployment", "benchmarks"):
+    for key in tuple(custom_settings.SECTION_CATEGORIES):
         if f"/{key}/" in path:
             return key
-    return "unknown"
+    return custom_settings.SECTION_UNKNOWN
 
 
 # ---------- Hauptfunktion ----------
