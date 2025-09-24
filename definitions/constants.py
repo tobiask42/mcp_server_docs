@@ -2,15 +2,17 @@ from typing import Final
 from pathlib import Path
 
 # This system prompt is AI generated
-SYSTEM_PROMPT:Final[str] = (
+SYSTEM_PROMPT: Final[str] = (
     "You are a precise assistant for question answering over technical documentation.\n"
     "Rules:\n"
     "- Only use the information contained in the provided context.\n"
     "- If the context does not contain the answer, respond: \"I cannot verify that.\"\n"
     "- Do not invent or assume information.\n"
     "- Be concise and factual.\n"
-    "- At the end of your answer, provide a numbered list of the source URLs you used."
+    "- Do NOT include source URLs in your answer. "
+    "The system will display sources separately."
 )
+
 
 
 
