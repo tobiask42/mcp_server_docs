@@ -7,9 +7,11 @@ from typing import Dict, Any, List, Final, Tuple  # <- Tuple ergänzt
 from definitions.custom_enums import EnvironmentKeys
 from definitions import constants
 from loguru import logger
+from config.settings import get_settings
+custom_settings = get_settings()
 
-MAX_CHARS: Final[int] = int(os.getenv(EnvironmentKeys.CHUNK_MAX_CHARS, 3000))
-OVERLAP_CHARS: Final[int] = int(os.getenv(EnvironmentKeys.CHUNK_OVERLAP, 0))
+MAX_CHARS: Final[int] = int(os.getenv(EnvironmentKeys.CHUNK_MAX_CHARS, custom_settings.CHUNK_MAX_CHARS))
+OVERLAP_CHARS: Final[int] = int(os.getenv(EnvironmentKeys.CHUNK_OVERLAP, custom_settings.CHUNK_OVERLAP))
 
 DEFAULT_IN_DIR = Path(constants.FEED_PATH)
 DEFAULT_OUT_DIR = Path(constants.CHUNK_PATH)
