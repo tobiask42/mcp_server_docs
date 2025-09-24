@@ -1,6 +1,6 @@
 (function () {
   const chatEl = document.getElementById('chat');
-  const inputEl = document.getElementById('q');
+  const inputEl = document.getElementById('question');
   const sendBtn = document.getElementById('send');
 
   async function ask() {
@@ -78,34 +78,38 @@
   function enhanceCodeBlocks(rootEl) {
     rootEl.querySelectorAll('pre').forEach(pre => {
       if (pre.querySelector('.copy-btn')) return;
+
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'copy-btn';
       btn.setAttribute('aria-label', 'Code in Zwischenablage kopieren');
       btn.textContent = 'Copy';
+
       btn.addEventListener('click', async () => {
         const code = pre.querySelector('code');
-        const txt = code ? code.innerText : pre.innerText;
+        const txt = code ? code.textContent : pre.textContent;
+
         try {
-          if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(txt);
-          } else {
-            const ta = document.createElement('textarea');
-            ta.value = txt; ta.style.position = 'fixed'; ta.style.top = '-1000px';
-            document.body.appendChild(ta); ta.focus(); ta.select();
-            document.execCommand('copy'); document.body.removeChild(ta);
-          }
-          btn.textContent = 'Kopiert!'; btn.classList.add('copied');
-          setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+          await navigator.clipboard.writeText(txt);
+          btn.textContent = 'Kopiert!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 1500);
         } catch (err) {
           console.error('Copy failed:', err);
           btn.textContent = 'Fehler';
-          setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+          setTimeout(() => {
+            btn.textContent = 'Copy';
+          }, 1500);
         }
       });
+
       pre.appendChild(btn);
     });
   }
+
 
   function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, s => (
