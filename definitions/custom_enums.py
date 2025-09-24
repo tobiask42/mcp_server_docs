@@ -4,13 +4,6 @@ from enum import IntEnum, StrEnum
 class ExitCode(IntEnum):
     SUCCESS = 0
     ERROR = 1
-
-class EnvironmentKeys(StrEnum):
-    EMAIL = "EMAIL"
-    SCRAPELIST = "SCRAPELIST"
-    CHUNK_MAX_CHARS = "CHUNK_MAX_CHARS"
-    CHUNK_OVERLAP = "CHUNK_OVERLAP"
-
     
 class ChunkKeys(StrEnum):
     URL = "url"
