@@ -36,9 +36,9 @@ def ingest_blocking() -> None:
     ingest_chunks_to_chroma()
     logger.info("Ingest finished")
 
-def ask_blocking(*, log_path: Path, question: str, overrides: dict[str,Any]) -> dict[str,Any]:
+def ask_blocking(question: str) -> dict[str,Any]:
     logger.info(f"ASK(job): {question!r}")
-    ans, used = answer_question(question=question, **overrides)
+    ans, used = answer_question(question=question)
     # kompaktes Quellenformat:
     sources: list[dict[str,Any]] = [{
         "url": it.get(CtxKeys.URL.value, ""),

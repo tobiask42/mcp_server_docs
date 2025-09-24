@@ -98,23 +98,9 @@ async def job_result(job_id: str) -> dict[str,Any]:
 @mcp.tool()
 async def ask_job(
     question: str,
-    model: str | None = None,
-    temperature: float | None = None,
-    num_ctx: int | None = None,
-    max_tokens: int | None = None,
-    max_ctx_chars: int | None = None,
-    max_per_url: int | None = None,
 ) -> dict[str,str]:
     """Startet Q&A als Hintergrund-Job und gibt job_id zurück."""
-    overrides = dict(
-        model=model or custom_settings.OLLAMA_MODEL,
-        temperature=temperature if temperature is not None else custom_settings.OLLAMA_TEMPERATURE,
-        num_ctx=num_ctx or custom_settings.OLLAMA_CONTEXT_WINDOW_TOKENS,
-        max_tokens=max_tokens or custom_settings.OLLAMA_MAX_TOKENS,
-        max_ctx_chars=max_ctx_chars or custom_settings.RAG_MAX_CONTEXT_CHARS,
-        max_per_url=max_per_url or custom_settings.RAG_MAX_CHUNKS_PER_URL,
-    )
-    def runner(*, log_path: Path):
-        return ask_blocking(log_path=log_path, question=question, overrides=overrides)
+    def runner() -> dict[str,Any]:
+        return ask_blocking(question=question)
     jid = jobman.submit("ask", runner)
     return {"job_id": jid}

@@ -36,13 +36,6 @@ def build_user_prompt(question: str, ctx_items: Sequence[CtxItem]) -> str:
 
 def answer_question(
     question: str,
-    model: str = custom_settings.OLLAMA_MODEL,
-    max_ctx_chars: int = custom_settings.RAG_MAX_CONTEXT_CHARS,
-    max_per_url: int = custom_settings.RAG_MAX_CHUNKS_PER_URL,
-    num_ctx: int = custom_settings.OLLAMA_CONTEXT_WINDOW_TOKENS,
-    max_tokens: int = custom_settings.OLLAMA_MAX_TOKENS,
-    *,
-    temperature: float = custom_settings.OLLAMA_TEMPERATURE
 ) -> Tuple[str, list[CtxItem]]:
     """
     Führt Retrieval -> Postprocessing -> LLM-Aufruf aus und gibt (Antwort, verwendete Kontexte) zurück.
@@ -51,16 +44,10 @@ def answer_question(
     ctx_items: list[CtxItem] = postprocess_results(
         raw,
         question,
-        max_ctx_chars=max_ctx_chars,
-        max_per_url=max_per_url,
     )
     user_prompt = build_user_prompt(question, ctx_items)
     answer: str = call_llm_ollama(
         user_prompt=user_prompt,
         system_prompt=SYSTEM_PROMPT,
-        model=model,
-        temperature=temperature,
-        num_ctx=num_ctx,
-        max_tokens=max_tokens,
     )
     return answer, ctx_items

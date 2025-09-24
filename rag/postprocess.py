@@ -13,7 +13,7 @@ def _keyword_overlap_score(query: str, doc: str) -> int:
 def postprocess_results(
         raw: dict[str, Any],
         query: str,
-        max_per_url: int,
+        max_per_url: int = custom_settings.RAG_MAX_CHUNKS_PER_URL,
         max_ctx_chars: int = custom_settings.RAG_MAX_CONTEXT_CHARS
 ) -> list[CtxItem]:
     docs  = raw.get(ChromaQueryKeys.DOCS,  [[]])[0]
