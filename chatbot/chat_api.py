@@ -33,17 +33,15 @@ class AskReq(BaseModel):
     timeout_s: int = 90
 
 @app.post("/chat/ask")
-async def chat_ask(req: AskReq):
+async def chat_ask(request: AskReq):
     # 1) Job starten (MCP-Tool direkt als Funktion aufrufen)
-    res = await ask_job(
-        question=req.question,
-    )
-    jid = res["job_id"]
+    response = await ask_job(question=request.question)
+    job_id = response["job_id"]
 
     # 2) Polling auf Ergebnis
-    deadline = asyncio.get_event_loop().time() + req.timeout_s
+    deadline = asyncio.get_event_loop().time() + request.timeout_s
     while True:
-        meta = jobman.result(jid)  # {"status": "...", "result": {...}|None, "error": ...}
+        meta = jobman.result(job_id)  # {"status": "...", "result": {...}|None, "error": ...}
         if meta["status"] == "success" and meta.get("result"):
             return meta["result"]            # -> {"answer": "...", "sources": [...]}
         if meta["status"] == "error":
