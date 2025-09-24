@@ -2,6 +2,7 @@ from __future__ import annotations
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import asyncio
 
@@ -10,6 +11,16 @@ import asyncio
 from server.mcp_server import jobman, ask_job  # ask_job ist async und gibt {"job_id": "..."} zurück
 
 app = FastAPI(title="Docs RAG Chat")
+
+
+# Absoluter Pfad zu /chatbot/static
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+if not STATIC_DIR.exists():
+    # hilft beim Debuggen, falls Verzeichnisname abweicht
+    raise RuntimeError(f"Static dir not found: {STATIC_DIR}")
+
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # Liefere die Chat-Seite
 @app.get("/", response_class=HTMLResponse)
