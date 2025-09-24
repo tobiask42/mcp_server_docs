@@ -30,12 +30,6 @@ def home():
 
 class AskReq(BaseModel):
     question: str
-    model: str | None = None
-    temperature: float | None = None
-    num_ctx: int | None = None
-    max_tokens: int | None = None
-    max_ctx_chars: int | None = None
-    max_per_url: int | None = None
     timeout_s: int = 90
 
 @app.post("/chat/ask")
@@ -43,12 +37,6 @@ async def chat_ask(req: AskReq):
     # 1) Job starten (MCP-Tool direkt als Funktion aufrufen)
     res = await ask_job(
         question=req.question,
-        model=req.model,
-        temperature=req.temperature,
-        num_ctx=req.num_ctx,
-        max_tokens=req.max_tokens,
-        max_ctx_chars=req.max_ctx_chars,
-        max_per_url=req.max_per_url,
     )
     jid = res["job_id"]
 
