@@ -71,6 +71,23 @@
     // Copy-Buttons
     enhanceCodeBlocks(d);
 
+    // LaTeX rendern (KaTeX) – nach dem Einfügen & Sanitisieren
+    if (window.renderMathInElement) {
+      // Standard-Delimiter: $$...$$ (Display), \( ... \) (Inline), optional $...$
+      window.renderMathInElement(d, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\(", right: "\\)", display: false },
+          // $...$ nur aktivieren, wenn du es wirklich brauchst:
+          // { left: "$", right: "$", display: false }
+        ],
+        throwOnError: false,
+        strict: "warn",
+        // Code/Pre/A ignorieren
+        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "a"]
+      });
+    }
+
     // Auto-Scroll
     chatEl.scrollTop = 0;
   }
