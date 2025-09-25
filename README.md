@@ -8,41 +8,108 @@ So können MCP-Clients (z. B. GitHub Copilot Chat) oder ein einfacher Web-Chatbo
 ### Pipeline zur Erstellung der Vektordatenbank
 ```mermaid
 sequenceDiagram
-  participant A as MCP-Schnittstelle
-  participant B as Job-Manager
-  participant H as Blocking Tasks
-  participant C as Crawler
-  participant F as Website
-  participant I as HTML-Processor
-  participant G as Speicher (JSONL)
-  participant D as Chunker
-  participant E as ChromaDB
+    participant O as Orchestrierung
+    participant C as Crawler
+    participant W as Zielseiten
+    participant S as Speicher (JSONL)
+    participant K as Chunker
+    participant V as Vektordatenbank (ChromaDB)
 
-  A->>B: (1) submit pipeline job
-  B->>H: (2) start pipeline
-  H->>C: (3) start crawler (subprocess)
-  C->>F: (4) call website
-  F-->>C: (5) send html
-  C->>I: (6) send html
-  I-->>C: (7) processed html
-  C->>G: (8) store jsonl
-  C-->>H: (9) unblock
-  H->>D: (10) start chunker (subprocess)
-  G-->>D: (11) get jsonl
-  D->>G: (12) store chunked jsonl
-  D-->>H: (13) unblock
-  H->>E: (14) start database creation (subprocess)
-  G->>E: (15) chunked jsonl → embed & store
-  E-->>H: (16) unblock
+    %% 1) Crawl
+    O->>C: Start Crawl
+    C->>W: Sitemap & Seiten abrufen (HTTP)
+    W-->>C: HTML
+    C->>C: HTML → Text
+    C->>S: Rohdaten speichern (JSONL)
+
+    Note over C,S: Rohdaten liegen als JSONL vor
+
+    %% 2) Chunking
+    O->>K: Start Chunking
+    S-->>K: JSONL lesen
+    K->>S: Chunked-JSONL schreiben
+
+    Note over K,S: Chunks sind vorbereitet für Embeddings
+
+    %% 3) Ingest
+    O->>V: Start Ingest
+    S-->>V: Chunked-JSONL lesen → Embeddings erzeugen
+    V->>V: Upsert in Vektordatenbank
+    V-->>O: Ingest fertig
+
 ```
-### Pipeline in Kürze
+### Pipeline-Überblick
 
-1. **Start:** MCP → Job-Manager → Orchestrierung startet Crawler.  
-2. **Extraktion & Aufbereitung:** Crawler lädt HTML, lässt es vom HTML-Processor bereinigen und schreibt **JSONL**.  
-3. **Chunking:** Orchestrierung startet Chunker, der JSONL liest und **Chunked JSONL** zurückschreibt.  
-4. **Vektordatenbank:** Orchestrierung startet DB-Schritt; Chunked JSONL wird eingebettet und in **ChromaDB** upserted.  
-5. **Synchronisation:** Jeder Schritt meldet per *unblock* an die Orchestrierung zurück.
+Die Orchestrierung steuert drei Schritte nacheinander:
 
+1. **Crawl:** Zielseiten werden über eine Sitemap geladen, HTML wird zu Text verarbeitet und als **JSONL** gespeichert.
+2. **Chunking:** Die Rohdaten (JSONL) werden eingelesen und in **Chunked-JSONL** zerlegt.
+3. **Ingest:** Die Chunks werden eingebettet und in die **Vektordatenbank (ChromaDB)** geschrieben.
+
+**Artefakte**
+- **Rohdaten (JSONL)**: Aus dem Crawl erzeugte Textrepräsentationen.
+- **Chunks (Chunked-JSONL)**: Vorverarbeitete Chunks für Embeddings.
+- **Embeddings in Vektordatenbank (ChromaDB)**: Persistente Speicherung der Embeddings für spätere Anfragen.
+
+### Nutzung des Chatbots
+```mermaid
+sequenceDiagram
+    participant UI as Chatbot-Oberfläche
+    participant MCP as MCP-Schnittstelle
+    participant OR as Orchestrierung (Jobs)
+    participant RAG as RAG/QA
+    participant VDB as Vektordatenbank
+    participant LLM as LLM
+
+    UI->>MCP: Frage
+    MCP->>OR: Job anlegen (async)
+    OR-->>MCP: job_id
+    MCP-->>UI: job_id
+
+    OR->>RAG: Anfrage verarbeiten
+    RAG->>VDB: Vektor-Suche
+    VDB-->>RAG: relevante Chunks
+    RAG->>LLM: Frage + Kontext
+    LLM-->>RAG: Antwort
+    RAG-->>OR: Antwort + Quellen
+
+    loop Polling
+        UI->>MCP: Jobstatus(job_id)?
+        MCP->>OR: Status(job_id)?
+        OR-->>MCP: running | success | error
+        alt Job erfolgreich
+            MCP-->>UI: Antwort + Quellen
+        else Job fehlgeschlagen oder Timeout
+            MCP-->>UI: Fehler/Timeout
+        end
+    end
+
+
+```
+
+Die Interaktion zwischen Nutzer und Chatbot erfolgt in mehreren Schritten:
+
+1. **Frage stellen**: Eine Anfrage wird über die **Chatbot-Oberfläche** eingegeben.
+
+2. **Weiterleitung**: Die Frage wird von der Orchestrierung an den **RAG/QA-Service** weitergegeben.
+
+3. **Retrieval**: Der Service sucht in der **Vektordatenbank (ChromaDB)** nach relevanten Dokument-Chunks.
+
+4. **Antwortgenerierung**: Die gefundenen Chunks werden zusammen mit der ursprünglichen Frage an das **LLM** übergeben, das daraus eine Antwort formuliert.
+
+5. **Polling und Rückgabe**: Die Chatbot-Oberfläche fragt regelmäßig den Jobstatus ab. Sobald die Orchestrierung die Antwort und Quellen bereithält, werden diese an die Oberfläche geliefert und angezeigt.
+
+### Beteiligte Komponenten
+
+- **Chatbot-Oberfläche**: Einstiegspunkt für Nutzerfragen und Anzeige der Antworten.
+
+- **Orchestrierung**: Leitet Anfragen und Antworten zwischen den Komponenten weiter.
+
+- **RAG/QA-Service**: Koordiniert Vektor-Suche und Antwortgenerierung.
+
+- **Vektordatenbank (ChromaDB)**: Liefert relevante Dokument-Chunks.
+
+- **LLM**: Generiert die endgültige Antwort aus Frage + Kontext.
 ## Voraussetzungen
 
 - [Ollama](https://ollama.com/) installiert  
@@ -164,7 +231,7 @@ Sobald die Vektordatenbank gefüllt wurde, kann ein einfacher Chatbot geöffnet 
 ```bash
 uvicorn chatbot.chat_api:app --reload
 ```
-Der Chatbot benötigt die Vektordatenbank und Ollama, aber nicht den MCP-Server.<br>
+Der Chatbot benötigt die Vektordatenbank und Ollama.<br>
 Die Weboberfläche steht unter http://127.0.0.1:8000<br>
 Kopierbare Codefenster und LaTeX Darstellung sind integriert.
 ## Nächste Schritte
