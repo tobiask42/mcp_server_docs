@@ -4,7 +4,44 @@ Dieses Projekt ist ein Prototyp, der im Rahmen einer Take-Home-Challenge entwick
 Ziel ist es, einen **MCP-Server** bereitzustellen, der technische Dokumentationen automatisch crawlt, in handliche Chunks zerlegt, in einer Vektordatenbank speichert und über **Retrieval-Augmented Generation (RAG)** für Fragen und Antworten verfügbar macht.  
 So können MCP-Clients (z. B. GitHub Copilot Chat) oder ein einfacher Web-Chatbot auf die Inhalte zugreifen.
 
----
+## Architekturübersicht
+### Pipeline zur Erstellung der Vektordatenbank
+```mermaid
+sequenceDiagram
+  participant A as MCP-Schnittstelle
+  participant B as Job-Manager
+  participant H as Blocking Tasks
+  participant C as Crawler
+  participant F as Website
+  participant I as HTML-Processor
+  participant G as Speicher (JSONL)
+  participant D as Chunker
+  participant E as ChromaDB
+
+  A->>B: (1) submit pipeline job
+  B->>H: (2) start pipeline
+  H->>C: (3) start crawler (subprocess)
+  C->>F: (4) call website
+  F-->>C: (5) send html
+  C->>I: (6) send html
+  I-->>C: (7) processed html
+  C->>G: (8) store jsonl
+  C-->>H: (9) unblock
+  H->>D: (10) start chunker (subprocess)
+  G-->>D: (11) get jsonl
+  D->>G: (12) store chunked jsonl
+  D-->>H: (13) unblock
+  H->>E: (14) start database creation (subprocess)
+  G->>E: (15) chunked jsonl → embed & store
+  E-->>H: (16) unblock
+```
+### Pipeline in Kürze
+
+1. **Start:** MCP → Job-Manager → Orchestrierung startet Crawler.  
+2. **Extraktion & Aufbereitung:** Crawler lädt HTML, lässt es vom HTML-Processor bereinigen und schreibt **JSONL**.  
+3. **Chunking:** Orchestrierung startet Chunker, der JSONL liest und **Chunked JSONL** zurückschreibt.  
+4. **Vektordatenbank:** Orchestrierung startet DB-Schritt; Chunked JSONL wird eingebettet und in **ChromaDB** upserted.  
+5. **Synchronisation:** Jeder Schritt meldet per *unblock* an die Orchestrierung zurück.
 
 ## Voraussetzungen
 
@@ -33,18 +70,21 @@ mcp-env-uv\Scripts\activate      # Windows
 uv pip install scrapy loguru beautifulsoup4 pydantic pydantic-settings "pydantic[email]" chromadb mcp fastapi
 ```
 ## Konfiguration
-Erstelle eine `.env`-Datei im Projektverzeichnis oder setze die Variablen als Environment Variablen.
+Erstelle eine `.env`-Datei im Projektverzeichnis oder setze die Variablen als Umgebungsvariablen.
 
 ### Pflichtwerte
 ```env
-# Liste der Sitemap-URLs (JSON-Format)
-SCRAPELIST=["https://fastapi.tiangolo.com/sitemap.xml"]
+# Sitemap-URL für crawling
+SCRAPE_URL=https://fastapi.tiangolo.com/sitemap.xml
 
 # Kontaktadresse (wird im User-Agent verwendet)
 EMAIL=email@example.com
 ```
 ### Optionale Werte (mit Defaults)
 ```env
+# Verhindert ein ungewolltes Löschen einer existierenden Datenbank (Auf True setzen um Löschen zu erlauben) 
+CHROMA_REMOVE_OLD=False
+
 CHROMA_BATCH_SIZE=1000
 CHUNK_MAX_CHARS=1000
 CHUNK_OVERLAP=100
@@ -125,13 +165,23 @@ Sobald die Vektordatenbank gefüllt wurde, kann ein einfacher Chatbot geöffnet 
 uvicorn chatbot.chat_api:app --reload
 ```
 Der Chatbot benötigt die Vektordatenbank und Ollama, aber nicht den MCP-Server.<br>
-Die Weboberfläche steht unter http://127.0.0.1:8000
+Die Weboberfläche steht unter http://127.0.0.1:8000<br>
+Kopierbare Codefenster und LaTeX Darstellung sind integriert.
 ## Nächste Schritte
+- Nutzung von anderen Datenquellen als gescrapeten Websites (Beispiel: Dokumentation von GitHub herunterladen und lokal in Vektordatenbank einfügen)
+- Integration des Alters der Quelle in die Vektordatenbank (falls verfügbar)
+- Nutzung von Scraper der keine Sitemaps benötigt
+- Erweiterbarkeit der Vektordatenbank ermöglichen (statt löschen und ersetzen)
+- Nutzung von LLMs über Web-API statt nur lokal
+- Anpassung des durch ChromaDB genutzten LMs
 - Antworten als Streaming im MCP Inspector anzeigen
 - Automatisiertes Re-Crawling & Re-Ingest (Scheduler)
 - Evaluation/Ranking der Antworten verbessern
+- Granulare Steuerung des Scores für Kategorien um einen Fokus zu erlauben (Beispiel: Vektordatenbank zieht Einsteigerthemen vor)
+- Steuerung für Scores nach Alter der Inhalte
+- Steuerung von HTML-Processing über Konfigurationsdateien
 ## Status
-Dies ist ein Prototyp - Konfiguration und Funktionsumfang können sich ändern.
+Dies ist ein Prototyp - Konfiguration und Funktionsumfang können sich ändern. Aktuell ist das Crawling auf FastAPI optimiert, andere Seiten funktionieren, werden aber möglicherweise nicht alle Features verwenden (Beispiel Kubernetes: LaTeX wird übernommen, Codebeispiele nicht).
 
 ## Lizenz
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
