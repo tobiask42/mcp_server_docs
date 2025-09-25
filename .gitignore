@@ -96,3 +96,6 @@ content_processor/chunks
 # chroma
 chroma
 vector_database/chroma_data
+
+# mermaid
+mermaid_entwurf.md
