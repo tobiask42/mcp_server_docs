@@ -108,7 +108,7 @@
 
         try {
           await navigator.clipboard.writeText(txt);
-          btn.textContent = 'Kopiert!';
+          btn.textContent = 'Copied!';
           btn.classList.add('copied');
           setTimeout(() => {
             btn.textContent = 'Copy';
