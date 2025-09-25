@@ -3,8 +3,12 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from config.settings import AppSettings, get_settings
 import asyncio
+
+
+custom_settings: AppSettings = get_settings()
 
 # Wir nutzen deine MCP-Tools / JobManager direkt
 # Wichtig: relativer Importpfad von deinem Projekt-Root aus
@@ -30,7 +34,8 @@ def home():
 
 class AskReq(BaseModel):
     question: str
-    timeout_s: int = 90
+    timeout_s: int = Field(
+        default_factory=lambda: get_settings().OLLAMA_TIMEOUT_S, ge=1, le=300) # Fall-Back für Timeout
 
 @app.post("/chat/ask")
 async def chat_ask(request: AskReq):

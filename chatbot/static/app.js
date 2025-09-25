@@ -12,7 +12,7 @@
       const res = await fetch('/chat/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, timeout_s: 90 })
+        body: JSON.stringify({ question: q})
       });
       if (!res.ok) {
         appendMD('bot', `Fehler: ${res.status}`);
