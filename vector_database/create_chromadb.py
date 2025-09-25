@@ -146,11 +146,11 @@ def ingest_chunks_to_chroma() -> None:
     """
     _, chunks_dir, database_path = get_base_and_dirs()
     if database_path.exists() and custom_settings.CHROMA_REMOVE_OLD:
-        logger.info("Found vector database. Removing...")
+        logger.warning("Found vector database. Removing...")
         shutil.rmtree(database_path)
         logger.info("Successfully removed old database")
     elif database_path.exists():
-        logger.info("Found vector database. Keeping existing data.")
+        logger.error("Found vector database. Keeping existing data. Aborting ingestion.")
         raise ChromaError("Vector database already exists. Set CHROMA_REMOVE_OLD to True to overwrite.")
     filepath = get_latest_chunk_file(chunks_dir)
     client = init_chroma_client(database_path)
