@@ -14,6 +14,7 @@ from typing import Any
 
 from definitions.custom_enums import Names, ChunkKeys
 from definitions import constants
+from definitions.errors import ChromaError
 from helpers.utils import count_lines
 
 from config.settings import get_settings, AppSettings
@@ -144,10 +145,13 @@ def ingest_chunks_to_chroma() -> None:
       4) JSONL in Batches hinzufügen
     """
     _, chunks_dir, database_path = get_base_and_dirs()
-    if database_path.exists():
+    if database_path.exists() and custom_settings.CHROMA_REMOVE_OLD:
         logger.info("Found vector database. Removing...")
         shutil.rmtree(database_path)
         logger.info("Successfully removed old database")
+    elif database_path.exists():
+        logger.info("Found vector database. Keeping existing data.")
+        raise ChromaError("Vector database already exists. Set CHROMA_REMOVE_OLD to True to overwrite.")
     filepath = get_latest_chunk_file(chunks_dir)
     client = init_chroma_client(database_path)
     collection = get_collection(client, name=Names.VECTOR_DATABASE_COLLECTION)
