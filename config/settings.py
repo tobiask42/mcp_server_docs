@@ -1,13 +1,13 @@
 from __future__ import annotations
-from typing import Annotated, Sequence
-from pydantic import Field, HttpUrl, TypeAdapter, field_validator, EmailStr
+from typing import Annotated
+from pydantic import Field, HttpUrl, TypeAdapter, EmailStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 
 _http_url = TypeAdapter(HttpUrl)
 
 class AppSettings(BaseSettings):
-    SCRAPELIST: Annotated[list[HttpUrl], Field(..., description="Required")]
+    SCRAPE_URL: Annotated[HttpUrl, Field(..., description="Required")]
     # Pflicht: muss per ENV/.env gesetzt werden, Format wird geprüft
     EMAIL: EmailStr = Field(..., description="Kontaktadresse für den Crawler (User-Agent)")
 
@@ -50,20 +50,6 @@ class AppSettings(BaseSettings):
         case_sensitive=True,
         extra="ignore",
     )
-
-    @field_validator("SCRAPELIST", mode="before")
-    @classmethod
-    def split_scrapelist(
-        cls,
-        v: str | Sequence[str] | Sequence[HttpUrl] | None,
-    ) -> list[HttpUrl]:
-        if v is None:
-            return []
-        if isinstance(v, str):
-            parts = [s.strip() for s in v.split(",") if s.strip()]
-        else:
-            parts = list(v)
-        return [_http_url.validate_python(u) for u in parts]
 
 # Singleton
 @lru_cache

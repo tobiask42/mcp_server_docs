@@ -19,7 +19,7 @@ custom_settings: AppSettings = get_settings()
 
 class DocsSpider(SitemapSpider):
     name: str = "mcp_scraper"
-    sitemap_urls: Sequence[str] = [str(url) for url in custom_settings.SCRAPELIST]
+    sitemap_urls: Sequence[str] = [str(custom_settings.SCRAPE_URL)]
 
     @classmethod
     def update_settings(cls, settings: BaseSettings) -> None:
