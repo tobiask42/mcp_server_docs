@@ -12,7 +12,7 @@ class AppSettings(BaseSettings):
     EMAIL: EmailStr = Field(..., description="Kontaktadresse für den Crawler (User-Agent)")
 
     CHROMA_BATCH_SIZE: int = 1000
-    CHROMA_REMOVE_OLD: bool = True
+    CHROMA_REMOVE_OLD: bool = False
 
     CHUNK_MAX_CHARS: int = 1000
     CHUNK_OVERLAP: int = 100
