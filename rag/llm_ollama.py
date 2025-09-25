@@ -1,7 +1,6 @@
 from definitions.errors import LLMError
 from config.settings import AppSettings, get_settings
 from pydantic import HttpUrl
-from definitions.constants import SYSTEM_PROMPT
 import requests
 from typing import Any
 
@@ -10,7 +9,7 @@ custom_settings: AppSettings = get_settings()
 def call_llm_ollama(
     user_prompt: str,
     *,
-    system_prompt: str = SYSTEM_PROMPT,
+    system_prompt: str = custom_settings.SYSTEM_PROMPT,
     model: str = custom_settings.OLLAMA_MODEL,
     temperature: float = custom_settings.OLLAMA_TEMPERATURE,
     num_ctx: int = custom_settings.OLLAMA_CONTEXT_WINDOW_TOKENS,

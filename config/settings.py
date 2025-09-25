@@ -34,6 +34,18 @@ class AppSettings(BaseSettings):
     ]
     OLLAMA_TIMEOUT_S: int = 120
 
+    # This system prompt is AI generated
+    SYSTEM_PROMPT: str = Field(
+        "You are a precise assistant for question answering over technical documentation.\n"
+        "Rules:\n"
+        "- Only use the information contained in the provided context.\n"
+        "- If the context does not contain the answer, respond: \"I cannot verify that.\"\n"
+        "- Do not invent or assume information.\n"
+        "- Be concise and factual.\n"
+        "- Do NOT include source URLs in your answer. The system will display sources separately.",
+        description="System prompt for the LLM"
+    )
+
     SPIDER_PRIORITY: str = "spider"
 
     SPIDER_AUTOTHROTTLE_ENABLED: bool = True
