@@ -13,8 +13,7 @@ def build_user_prompt(question: str, ctx_items: Sequence[CtxItem]) -> str:
     if not ctx_items:
         return (
             f"Question:\n{question}\n\n"
-            "Context:\nNo relevant context found.\n\n"
-            "Answer the question strictly based on the context above."
+            f"{custom_settings.NO_CONTEXT_PROMPT}"
         )
 
     blocks: list[str] = []

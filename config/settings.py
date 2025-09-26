@@ -46,6 +46,11 @@ class AppSettings(BaseSettings):
         description="System prompt for the LLM"
     )
 
+    NO_CONTEXT_PROMPT: str = Field(
+                    "Context:\nNo relevant context found.\n\n"
+            "Answer the question strictly based on the context above.",
+        description="Prompt to use when no context is found")
+
     SPIDER_PRIORITY: str = "spider"
 
     SPIDER_AUTOTHROTTLE_ENABLED: bool = True
