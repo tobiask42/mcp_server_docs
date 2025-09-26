@@ -17,7 +17,7 @@ class AppSettings(BaseSettings):
     CHUNK_MAX_CHARS: int = 1000
     CHUNK_OVERLAP: int = 100
 
-    CHROMA_NEAREST: int = 3
+    CHROMA_N_RESULTS: int = 3
 
     SECTION_UNKNOWN: str = "unknown"
     SECTION_CATEGORIES: list[str] = ["tutorial", "advanced", "reference", "alternatives", "deployment", "benchmarks"]
