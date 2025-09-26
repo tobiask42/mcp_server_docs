@@ -207,11 +207,21 @@ OLLAMA_MAX_TOKENS=384
 OLLAMA_ENDPOINT="http://localhost:11434/api/chat"
 OLLAMA_TIMEOUT_S=120
 
-SYSTEM_PROMPT=
+SYSTEM_PROMPT="You are a precise assistant for question answering over technical documentation.
+        Rules:
+        - Only use the information contained in the provided context.
+        - If the context does not contain the answer, respond: I cannot verify that.
+        - Do not invent or assume information.
+        - Be concise and factual.
+        - If the context contains multiple relevant sections, synthesize them into a coherent answer.
+        - If the context contains contradictory information, indicate the uncertainty in your answer.
+        - Do NOT include source URLs in your answer. The system will display sources separately."
 # Zum Bau der query wenn kein Kontext vorhanden ist
-NO_CONTEXT_PROMPT=
+NO_CONTEXT_PROMPT="Context:
+            No relevant context found.
+            Answer the question strictly based on the context above."
 # Zum Bau der query wenn Kontext vorhanden ist
-CONTEXT_PROMPT=
+CONTEXT_PROMPT="Answer the question strictly based on the context above."
 
 SPIDER_PRIORITY=spider
 SPIDER_AUTOTHROTTLE_ENABLED=True
