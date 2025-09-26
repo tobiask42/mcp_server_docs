@@ -17,16 +17,18 @@ class AppSettings(BaseSettings):
     CHUNK_MAX_CHARS: int = 1000
     CHUNK_OVERLAP: int = 100
 
+    CHROMA_NEAREST: int = 3
+
     SECTION_UNKNOWN: str = "unknown"
     SECTION_CATEGORIES: list[str] = ["tutorial", "advanced", "reference", "alternatives", "deployment", "benchmarks"]
 
-    RAG_MAX_CONTEXT_CHARS: int = 5000
-    RAG_MAX_CHUNKS_PER_URL: int = 1
+    RAG_MAX_CONTEXT_CHARS: int = 9000
+    RAG_MAX_CHUNKS_PER_URL: int = 3
 
     OLLAMA_MODEL: str = "mistral:7b-instruct"
-    OLLAMA_TEMPERATURE: float = 0.0
+    OLLAMA_TEMPERATURE: float = 0.1 # 0.0 = deterministic, 1.0 = creative
     OLLAMA_CONTEXT_WINDOW_TOKENS: int = 4096
-    OLLAMA_MAX_TOKENS: int = 384
+    OLLAMA_MAX_TOKENS: int = 768
 
     OLLAMA_ENDPOINT: Annotated[
         HttpUrl,
@@ -42,6 +44,8 @@ class AppSettings(BaseSettings):
         "- If the context does not contain the answer, respond: \"I cannot verify that.\"\n"
         "- Do not invent or assume information.\n"
         "- Be concise and factual.\n"
+        "- If the context contains multiple relevant sections, synthesize them into a coherent answer.\n"
+        "- If the context contains contradictory information, indicate the uncertainty in your answer.\n"
         "- Do NOT include source URLs in your answer. The system will display sources separately.",
         description="System prompt for the LLM"
     )
