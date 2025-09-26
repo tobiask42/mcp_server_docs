@@ -12,7 +12,7 @@
       const res = await fetch('/chat/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q})
+        body: JSON.stringify({ question: q })
       });
       if (!res.ok) {
         appendMD('bot', `Fehler: ${res.status}`);
@@ -42,24 +42,20 @@
     d.innerHTML = safeHtml;
 
     // Quellenliste (optional) — nummeriert
-    if (Array.isArray(sources) && sources.length) {
-      const ol = document.createElement('ol');
-      ol.className = 'sources';
-      ol.style.marginTop = '0.5rem';
+    sources.forEach((s, i) => {
+      const li = document.createElement('li');
+      li.style.listStyle = 'none'; // normale Ziffern entfernen
 
-      sources.forEach((s) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = s.url || '#';
-        a.textContent = s.title || s.url || 'Quelle';
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        li.appendChild(a);
-        ol.appendChild(li);
-      });
+      const a = document.createElement('a');
+      a.href = s.url || '#';
+      a.textContent = `[${i + 1}] ${s.title || s.url || 'Source'}`;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
 
-      d.appendChild(ol);
-    }
+      li.appendChild(a);
+      ol.appendChild(li);
+    });
+
 
     chatEl.insertBefore(d, chatEl.firstChild);
 
