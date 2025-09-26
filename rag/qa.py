@@ -40,4 +40,15 @@ def answer_question(question: str,) -> Tuple[str, list[CtxItem]]:
     ctx_items: list[CtxItem] = postprocess_results(raw, question)
     user_prompt = build_user_prompt(question, ctx_items)
     answer: str = call_llm_ollama(user_prompt=user_prompt)
-    return answer, ctx_items
+    unique_ctx_items:list[CtxItem] = deduplicate_urls(ctx_items)
+    return answer, unique_ctx_items
+
+def deduplicate_urls(ctx_items: list[CtxItem]) -> list[CtxItem]:
+    seen_urls: set[str] = set()
+    unique_ctx_items: list[CtxItem] = []
+    for item in ctx_items:
+        url = item[CtxKeys.URL.value]
+        if url not in seen_urls:
+            seen_urls.add(url)
+            unique_ctx_items.append(item)
+    return unique_ctx_items
