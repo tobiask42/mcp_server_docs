@@ -42,19 +42,27 @@
     d.innerHTML = safeHtml;
 
     // Quellenliste (optional) — nummeriert
-    sources.forEach((s, i) => {
-      const li = document.createElement('li');
-      li.style.listStyle = 'none'; // normale Ziffern entfernen
+    const safeSources = Array.isArray(sources) ? sources : [];
 
-      const a = document.createElement('a');
-      a.href = s.url || '#';
-      a.textContent = `[${i + 1}] ${s.title || s.url || 'Source'}`;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
+    if (safeSources.length) {
+      const ol = document.createElement('ol');
+      ol.className = 'sources';
+      ol.style.marginTop = '0.5rem';
 
-      li.appendChild(a);
-      ol.appendChild(li);
-    });
+      safeSources.forEach((s, i) => {
+        const li = document.createElement('li');
+        li.style.listStyle = 'none'; // keine 1. 2. 3.
+        const a = document.createElement('a');
+        a.href = s.url || '#';
+        a.textContent = `[${i + 1}] ${s.title || s.url || 'Source'}`;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        li.appendChild(a);
+        ol.appendChild(li);
+      });
+
+      d.appendChild(ol);
+    }
 
 
     chatEl.insertBefore(d, chatEl.firstChild);
