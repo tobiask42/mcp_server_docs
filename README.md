@@ -192,18 +192,20 @@ CHROMA_BATCH_SIZE=1000
 CHUNK_MAX_CHARS=1000
 CHUNK_OVERLAP=100
 
+CHROMA_N_RESULTS: int = 3
+
 # Werte für unbekannte Sections und Sections der Website, die nach Bedarf angepasst werden können.
 SECTION_UNKNOWN=unknown
 SECTION_CATEGORIES=["tutorial", "advanced", "reference", "alternatives", "deployment", "benchmarks"]
 
 
-RAG_MAX_CONTEXT_CHARS=5000
-RAG_MAX_CHUNKS_PER_URL=1
+RAG_MAX_CONTEXT_CHARS=9000
+RAG_MAX_CHUNKS_PER_URL=3
 
 OLLAMA_MODEL=mistral:7b-instruct
-OLLAMA_TEMPERATURE=0.0
+OLLAMA_TEMPERATURE=0.1
 OLLAMA_CONTEXT_WINDOW_TOKENS=4096
-OLLAMA_MAX_TOKENS=384
+OLLAMA_MAX_TOKENS=768
 OLLAMA_ENDPOINT="http://localhost:11434/api/chat"
 OLLAMA_TIMEOUT_S=120
 
