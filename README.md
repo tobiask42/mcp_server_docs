@@ -192,7 +192,7 @@ CHROMA_BATCH_SIZE=1000
 CHUNK_MAX_CHARS=1000
 CHUNK_OVERLAP=100
 
-CHROMA_N_RESULTS: int = 3
+CHROMA_N_RESULTS=3
 
 # Werte für unbekannte Sections und Sections der Website, die nach Bedarf angepasst werden können.
 SECTION_UNKNOWN=unknown
