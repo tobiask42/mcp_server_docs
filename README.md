@@ -244,6 +244,11 @@ python chunker_main.py
 python db_creation_main.py
 python rag_main.py
 ```
+Alternativ dazu kann das Pipeline-Skript ausgeführt werden:
+```bash
+python pipeline_main.py
+```
+
 ## MCP Server
 Starte den MCP-Server
 ```bash
