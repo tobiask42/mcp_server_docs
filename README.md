@@ -110,6 +110,42 @@ Die Interaktion zwischen Nutzer und Chatbot erfolgt in mehreren Schritten:
 - **Vektordatenbank (ChromaDB)**: Liefert relevante Dokument-Chunks.
 
 - **LLM**: Generiert die endgültige Antwort aus Frage + Kontext.
+### Beispielabfrage
+
+How do I start a FastAPI server with uvicorn?
+
+---
+To start a FastAPI server with uvicorn, follow these steps:
+1. Activate your development environment (not specified in the context).
+2. Install Uvicorn by running `pip install "uvicorn[standard]"`.
+3. If you haven't installed FastAPI yet, do so by running `pip install "fastapi[standard]"`. This will also install uvicorn[standard].
+4. Replace 'main' with the name of your FastAPI application module and 'app' with the name of your FastAPI application instance in the following command:
+```
+uvicorn main:app --host 0.0.0.0 --port 80
+```
+This command starts the server on port 80, making it accessible from any network interface (0.0.0.0). Press CTRL+C to quit the server.
+
+[[1] Run a Server Manually](https://fastapi.tiangolo.com/deployment/manually/)
+
+### JSON-Antwort
+````json
+{
+  "status": "success",
+  "result": {
+    "answer": "To start a FastAPI server with uvicorn, follow these steps:\n\n1. Activate your development environment.\n2. Install Uvicorn by running `pip install \"uvicorn[standard]\"`.\n3. Ensure you have a FastAPI application (e.g., `main.py` containing the FastAPI app instance).\n4. Run the server program using uvicorn, passing your application and the desired host and port:\n\n```\n$ uvicorn main:app --host 0.0.0.0 --port 80\n```\n\nThis command will start the FastAPI server on port 80 with the IP address 0.0.0.0, making it accessible from any network interface. Press CTRL+C to quit the server.",
+    "sources": [
+      {
+        "url": "https://fastapi.tiangolo.com/deployment/manually/",
+        "title": "Run a Server Manually",
+        "heading": "",
+        "distance": 0.44813549518585205,
+        "overlap": 5
+      }
+    ]
+  },
+  "error": null
+}
+````
 ## Voraussetzungen
 
 - [Ollama](https://ollama.com/) installiert  
@@ -172,6 +208,10 @@ OLLAMA_ENDPOINT="http://localhost:11434/api/chat"
 OLLAMA_TIMEOUT_S=120
 
 SYSTEM_PROMPT=
+# Zum Bau der query wenn kein Kontext vorhanden ist
+NO_CONTEXT_PROMPT=
+# Zum Bau der query wenn Kontext vorhanden ist
+CONTEXT_PROMPT=
 
 SPIDER_PRIORITY=spider
 SPIDER_AUTOTHROTTLE_ENABLED=True
