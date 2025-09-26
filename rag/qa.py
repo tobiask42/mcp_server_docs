@@ -28,7 +28,7 @@ def build_user_prompt(question: str, ctx_items: Sequence[CtxItem]) -> str:
     return (
         f"Question:\n{question}\n\n"
         f"Context:\n{context}\n\n"
-        "Answer the question strictly based on the context above."
+        f"{custom_settings.CONTEXT_PROMPT}"
     )
 
 

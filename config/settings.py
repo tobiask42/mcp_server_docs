@@ -50,6 +50,10 @@ class AppSettings(BaseSettings):
                     "Context:\nNo relevant context found.\n\n"
             "Answer the question strictly based on the context above.",
         description="Prompt to use when no context is found")
+    
+    CONTEXT_PROMPT: str = Field(
+                "Answer the question strictly based on the context above.",
+        description="Prompt to use when no context is found")
 
     SPIDER_PRIORITY: str = "spider"
 
