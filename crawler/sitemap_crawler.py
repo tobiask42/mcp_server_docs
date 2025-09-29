@@ -1,5 +1,4 @@
 # crawler/sitemap_crawler.py
-from __future__ import annotations
 from loguru import logger
 from scrapy.http import Response
 from scrapy.crawler import CrawlerProcess

@@ -1,6 +1,4 @@
 # The processing logic was programmed with AI support
-from __future__ import annotations
-
 import json, re, hashlib
 from pathlib import Path
 from typing import Dict, Any, List, Final, Tuple  # <- Tuple ergänzt
