@@ -11,7 +11,7 @@ from server.mcp_server import mcp
 async def _run() -> None:
     # Frühe Sichtprüfung der Settings, damit Fehlkonfig direkt auffällt
     custom_settings:AppSettings = get_settings()
-    logger.info(f"Loaded settings: EMAIL={custom_settings.EMAIL}, SCRAPELIST={len(custom_settings.SCRAPELIST)} URL(s)")
+    logger.info(f"Loaded settings: EMAIL={custom_settings.EMAIL}, SCRAPE_URL={len(custom_settings.SCRAPE_URL)} URL(s)")
     # MCP-Server über stdio starten (der Dev-Client/Inspector spricht ihn dann an)
     mcp.run()
 
