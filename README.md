@@ -5,7 +5,7 @@ Ziel ist es, einen **MCP-Server** bereitzustellen, der technische Dokumentatione
 So können MCP-Clients (z. B. GitHub Copilot Chat) oder ein einfacher Web-Chatbot auf die Inhalte zugreifen.
 
 ### Zweck des Chatbots (Scope-Hinweis)
-Der Chatbot dient ausschließlich als **Test-Harness** für den MCP-Server (manuelle End-to-End-Prüfung der RAG-Pipeline). Er ist nicht Teil der Kernanforderungen.
+Der Chatbot dient ausschließlich als **Test-Harness** für den MCP-Server. Er ist nicht Teil der Kernanforderungen.
 
 ## Architekturübersicht
 ### Pipeline zur Erstellung der Vektordatenbank
@@ -297,6 +297,7 @@ Der Chatbot benötigt die Vektordatenbank und Ollama.<br>
 Die Weboberfläche steht unter http://127.0.0.1:8000<br>
 Kopierbare Codefenster und LaTeX Darstellung sind integriert.
 ## Nächste Schritte
+- Speicherung/Änderung von vorhandener Vektordatenbank statt Löschung
 - Nutzung von anderen Datenquellen als gescrapeten Websites (Beispiel: Dokumentation von GitHub herunterladen und lokal in Vektordatenbank einfügen)
 - Integration des Alters der Quelle in die Vektordatenbank (falls verfügbar)
 - Nutzung von Scraper der keine Sitemaps benötigt
