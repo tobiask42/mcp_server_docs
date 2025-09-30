@@ -4,6 +4,9 @@ Dieses Projekt ist ein Prototyp, der im Rahmen einer Take-Home-Challenge entwick
 Ziel ist es, einen **MCP-Server** bereitzustellen, der technische Dokumentationen automatisch crawlt, in handliche Chunks zerlegt, in einer Vektordatenbank speichert und über **Retrieval-Augmented Generation (RAG)** für Fragen und Antworten verfügbar macht.  
 So können MCP-Clients (z. B. GitHub Copilot Chat) oder ein einfacher Web-Chatbot auf die Inhalte zugreifen.
 
+### Zweck des Chatbots (Scope-Hinweis)
+Der Chatbot dient ausschließlich als **Test-Harness** für den MCP-Server (manuelle End-to-End-Prüfung der RAG-Pipeline). Er ist nicht Teil der Kernanforderungen.
+
 ## Architekturübersicht
 ### Pipeline zur Erstellung der Vektordatenbank
 ```mermaid
