@@ -70,6 +70,8 @@ class AppSettings(BaseSettings):
 
     API_KEY: str | None = None
 
+    POLLING_INTERVAL_S: float = 0.5
+
     model_config = SettingsConfigDict(
         env_file=".env",
         case_sensitive=True,

@@ -42,6 +42,7 @@ async def chat_ask(request: AskReq) -> dict[str, Any]:
     job_id: str = response["job_id"]
 
     # 2) Polling auf Ergebnis
+
     deadline = asyncio.get_event_loop().time() + request.timeout_s
     while True:
         meta = await job_result(job_id)  # {"status": "...", "result": {...}|None, "error": ...}
@@ -51,4 +52,4 @@ async def chat_ask(request: AskReq) -> dict[str, Any]:
             raise HTTPException(500, detail=meta.get("error", "error"))
         if asyncio.get_event_loop().time() > deadline:
             raise HTTPException(504, detail="timeout")
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(custom_settings.POLLING_INTERVAL_S)
