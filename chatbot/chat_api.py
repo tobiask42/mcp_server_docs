@@ -1,6 +1,6 @@
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import Any
@@ -15,6 +15,10 @@ custom_settings: AppSettings = get_settings()
 
 app = FastAPI(title="Docs RAG Chat")
 
+# Vermeide 404 für favicon.ico
+@app.get("/favicon.ico",include_in_schema=False)
+async def favicon():
+    return Response(status_code=204)  # No Content
 
 # Absoluter Pfad zu /chatbot/static
 BASE_DIR = Path(__file__).resolve().parent
