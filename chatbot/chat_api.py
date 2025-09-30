@@ -3,15 +3,14 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from typing import Any
 from config.settings import AppSettings, get_settings
 import asyncio
+from server.mcp_server import ask_job, job_result # ask_job und job_result sind async -> await notwendig
 
+# Nutzung von MCP-Server-Tools im Chat-API-Kontext
 
 custom_settings: AppSettings = get_settings()
-
-# Wir nutzen deine MCP-Tools / JobManager direkt
-# Wichtig: relativer Importpfad von deinem Projekt-Root aus
-from server.mcp_server import jobman, ask_job  # ask_job ist async und gibt {"job_id": "..."} zurück
 
 app = FastAPI(title="Docs RAG Chat")
 
@@ -37,15 +36,15 @@ class AskReq(BaseModel):
         default_factory=lambda: get_settings().OLLAMA_TIMEOUT_S, ge=1, le=300) # Fall-Back für Timeout
 
 @app.post("/chat/ask")
-async def chat_ask(request: AskReq):
+async def chat_ask(request: AskReq) -> dict[str, Any]:
     # 1) Job starten (MCP-Tool direkt als Funktion aufrufen)
     response = await ask_job(question=request.question)
-    job_id = response["job_id"]
+    job_id: str = response["job_id"]
 
     # 2) Polling auf Ergebnis
     deadline = asyncio.get_event_loop().time() + request.timeout_s
     while True:
-        meta = jobman.result(job_id)  # {"status": "...", "result": {...}|None, "error": ...}
+        meta = await job_result(job_id)  # {"status": "...", "result": {...}|None, "error": ...}
         if meta["status"] == "success" and meta.get("result"):
             return meta["result"]            # -> {"answer": "...", "sources": [...]}
         if meta["status"] == "error":
