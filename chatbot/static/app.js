@@ -161,7 +161,7 @@
   // Events (kein inline onclick mehr)
   sendBtn.addEventListener('click', ask);
   inputEl.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && isAsking === false) {
       e.preventDefault();
       ask();
     }
