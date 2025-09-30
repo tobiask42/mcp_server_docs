@@ -3,9 +3,14 @@
   const inputEl = document.getElementById('question');
   const sendBtn = document.getElementById('send');
 
+  let isAsking = false; // Verhindert Mehrfach-Abschicken
+  let currentAbortController = null; // Für Abbrechen-Funktion
+
   async function ask() {
     const q = (inputEl.value || '').trim();
-    if (!q) return;
+    if (!q  || isAsking) return; // nichts senden wenn leer oder schon eine Anfrage läuft
+
+    setBusy(true);
     appendMD('you', q);
     inputEl.value = '';
     try {
@@ -22,6 +27,21 @@
       appendMD('bot', data.answer, data.sources);
     } catch (e) {
       appendMD('bot', String(e?.message || e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function setBusy(state){
+    isAsking = state;
+    sendBtn.disabled = state;
+    inputEl.disabled = state;
+    sendBtn.setAttribute('aria-busy', state ? 'true' : 'false');
+    if (state) {
+      sendBtn.textContent = '...';
+    } else {
+      sendBtn.textContent = 'Send';
+      inputEl.focus();
     }
   }
 
