@@ -57,5 +57,5 @@ def pipeline_blocking(*,log_path:Path) -> None:
     if rc != 0:
         raise RuntimeError(f"crawl subprocess exit code {rc}")
     # 2) Chunking & Ingest
-    chunk_blocking()
-    ingest_blocking()
+    chunk_blocking(log_path=log_path)
+    ingest_blocking(log_path=log_path)
