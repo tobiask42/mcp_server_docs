@@ -4,7 +4,6 @@
   const sendBtn = document.getElementById('send');
 
   let isAsking = false; // Verhindert Mehrfach-Abschicken
-  let currentAbortController = null; // Für Abbrechen-Funktion
 
   async function ask() {
     const q = (inputEl.value || '').trim();
