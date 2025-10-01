@@ -100,7 +100,7 @@ async def ask_job(
     question: str,
 ) -> dict[str,str]:
     """Startet Q&A als Hintergrund-Job und gibt job_id zurück."""
-    def runner() -> dict[str,Any]:
+    def runner(*, log_path: Path | None = None) -> dict[str,Any]:
         return ask_blocking(question=question)
     jid = jobman.submit("ask", runner)
     return {"job_id": jid}
