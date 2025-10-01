@@ -111,7 +111,7 @@ class JobManager:
                     raise ValueError("args must be provided for subprocess jobs")
 
                 # STDOUT/STDERR in die Job-Logdatei umleiten
-                with log_path.open("w", encoding="utf-8", errors="ignore") as lf:
+                with log_path.open("a", encoding="utf-8", errors="ignore") as lf:
                     proc = subprocess.Popen(
                         args,
                         stdout=lf,
