@@ -87,7 +87,7 @@ class JobManager:
                     raise ValueError("fn must be provided for thread jobs")
 
                 # Konvention: Worker akzeptiert log_path als Keyword-Argument
-                res = fn()
+                res = fn(log_path=log_path)
                 with self._lock:
                     self.jobs[jid]["result"] = res
                     self.jobs[jid]["status"] = "success"

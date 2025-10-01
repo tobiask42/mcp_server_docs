@@ -26,17 +26,17 @@ def crawl_blocking(*, log_path: Path) -> None:
     except Exception:
         raise
 
-def chunk_blocking() -> None:
+def chunk_blocking(*, log_path: Path | None = None) -> None:
     logger.info("Chunking started")
     build_chunks()
     logger.info("Chunking finished")
 
-def ingest_blocking() -> None:
+def ingest_blocking(*, log_path: Path | None = None) -> None:
     logger.info("Ingest started")
     ingest_chunks_to_chroma()
     logger.info("Ingest finished")
 
-def ask_blocking(question: str) -> dict[str,Any]:
+def ask_blocking(*, question: str, log_path: Path | None = None) -> dict[str, Any]:
     logger.info(f"ASK(job): {question!r}")
     ans, used = answer_question(question=question)
     # kompaktes Quellenformat:
