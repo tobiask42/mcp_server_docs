@@ -38,7 +38,7 @@ def home():
 class AskReq(BaseModel):
     question: str
     timeout_s: int = Field(
-        default_factory=lambda: get_settings().OLLAMA_TIMEOUT_S, ge=1, le=300) # Fall-Back für Timeout
+        default_factory=lambda: custom_settings.OLLAMA_TIMEOUT_S, ge=1, le=300) # Fall-Back für Timeout
 
 @app.post("/chat/ask")
 async def chat_ask(request: AskReq) -> dict[str, Any]:
