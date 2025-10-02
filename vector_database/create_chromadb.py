@@ -19,6 +19,17 @@ from config.settings import get_settings, AppSettings
 
 custom_settings: AppSettings = get_settings()
 
+pkg = None
+if custom_settings.CHROMA_USE_GPU:
+    try:
+        import onnxruntime as ort # type: ignore
+        pkg = True
+    except ImportError as ie:
+        pkg = None
+
+if pkg is None:
+    logger.warning("ONNXRuntime or ChromaDB with ONNX support not installed. Falling back to CPU embeddings.")
+
 def get_base_and_dirs() -> tuple[Path, Path, Path]:
     """
     Liefert:
@@ -70,6 +81,12 @@ def init_chroma_client(database_path: Path) -> ClientAPI:
 
 
 def get_collection(client: ClientAPI, name: str) -> Any:
+    if custom_settings.CHROMA_USE_GPU and pkg is not None:
+        from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2  # type: ignore
+        ef = ONNXMiniLM_L6_V2(preferred_providers=custom_settings.ONNX_PREFERRED_PROVIDERS)
+        collection = client.get_or_create_collection(name=name, embedding_function=ef) # type: ignore
+        logger.info("Created Chroma collection with GPU embeddings")
+        return collection
     """Erstellt/öffnet die Zielsammlung."""
     collection = client.get_or_create_collection(name=name)
     logger.info("Created Chroma collection")

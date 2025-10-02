@@ -13,6 +13,14 @@ class AppSettings(BaseSettings):
     CHROMA_BATCH_SIZE: int = 1000
     CHROMA_REMOVE_OLD: bool = False
 
+    CHROMA_USE_GPU: bool = False
+    # Nur relevant, wenn CHROMA_USE_GPU=True
+
+    ONNX_PREFERRED_PROVIDERS: list[str] = Field(
+        default_factory=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"],
+        description="Preferred ONNX Runtime providers when using GPU. E.g. ['CUDAExecutionProvider', 'CPUExecutionProvider'] or ['TensorrtExecutionProvider', 'CUDAExecutionProvider', 'CPUExecutionProvider'] if TensorRT is installed."
+    )
+
     CHUNK_MAX_CHARS: int = 1000
     CHUNK_OVERLAP: int = 100
 
