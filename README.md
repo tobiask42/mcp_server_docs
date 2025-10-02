@@ -173,13 +173,31 @@ source mcp-env-uv/bin/activate   # Linux/Mac
 mcp-env-uv\Scripts\activate      # Windows
 ```
 ### Abhängigkeiten installieren
+Für Windows
 ```bash
-uv pip install -r requirements_cpu.txt
+uv pip install -r requirements_cpu_win.txt
+```
+Für Linux
+```bash
+uv pip install -r requirements_cpu_linux.txt
+```
+Fallback
+```bash
+uv pip install scrapy loguru beautifulsoup4 pydantic pydantic-settings "pydantic[email]" chromadb mcp fastapi
 ```
 ### Variante mit GPU-Unterstützung für die erstellung der Embeddings
-Passende Version von TensorRT installieren (Nvidia Account wird benötigt)
+Passende Version von TensorRT installieren (Nvidia Account wird benötigt)<br>
+Für Windows
 ```bash
-uv pip install -r requirements_gpu.txt
+uv pip install -r requirements_gpu_win.txt
+```
+Für Linux
+```bash
+uv pip install -r requirements_gpu_linux.txt
+```
+Fallback
+```bash
+uv pip install scrapy loguru beautifulsoup4 pydantic pydantic-settings "pydantic[email]" chromadb mcp fastapi "onnxruntime-gpu[cuda,cudnn]"
 ```
 ## Konfiguration
 Erstelle eine `.env`-Datei im Projektverzeichnis oder setze die Variablen als Umgebungsvariablen.
