@@ -171,9 +171,14 @@ cd mcp_server_docs
 uv venv mcp-env-uv
 source mcp-env-uv/bin/activate   # Linux/Mac
 mcp-env-uv\Scripts\activate      # Windows
-
-# Abhängigkeiten installieren
+```
+### Abhängigkeiten installieren
+```bash
 uv pip install scrapy loguru beautifulsoup4 pydantic pydantic-settings "pydantic[email]" chromadb mcp fastapi
+```
+### Variante mit GPU-Unterstützung für die erstellung der Embeddings
+```bash
+uv pip install scrapy loguru beautifulsoup4 pydantic pydantic-settings "pydantic[email]" chromadb mcp fastapi "onnxruntime-gpu[cuda,cudnn]"
 ```
 ## Konfiguration
 Erstelle eine `.env`-Datei im Projektverzeichnis oder setze die Variablen als Umgebungsvariablen.
