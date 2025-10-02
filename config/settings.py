@@ -17,7 +17,7 @@ class AppSettings(BaseSettings):
     # Nur relevant, wenn CHROMA_USE_GPU=True
 
     ONNX_PREFERRED_PROVIDERS: list[str] = Field(
-        default_factory=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"],
+        default_factory=lambda: ["CUDAExecutionProvider"],
         description="Preferred ONNX Runtime providers when using GPU. E.g. ['CUDAExecutionProvider', 'CPUExecutionProvider'] or ['TensorrtExecutionProvider', 'CUDAExecutionProvider', 'CPUExecutionProvider'] if TensorRT is installed."
     )
 
