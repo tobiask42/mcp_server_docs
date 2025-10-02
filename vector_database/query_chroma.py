@@ -22,7 +22,8 @@ def query_db(query: str,n_res: int = settings.CHROMA_N_RESULTS) -> Any:
         collection = client.get_collection(name=Names.VECTOR_DATABASE_COLLECTION, embedding_function=ef) # type: ignore
     else:
         logger.info("Using default embedding function (SentenceTransformer) for Query on CPU.")
-        collection = client.get_collection(name=Names.VECTOR_DATABASE_COLLECTION)
+        ef = ONNXMiniLM_L6_V2() # type: ignore
+        collection = client.get_collection(name=Names.VECTOR_DATABASE_COLLECTION, embedding_function=ef) # type: ignore
     results = collection.query(
         query_texts=[query],
         n_results=n_res
