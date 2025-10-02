@@ -8,7 +8,6 @@ from math import ceil
 from chromadb import PersistentClient
 from chromadb.api import ClientAPI
 from loguru import logger
-from typing import Any
 
 from definitions.custom_enums import Names, ChunkKeys
 from definitions import constants
