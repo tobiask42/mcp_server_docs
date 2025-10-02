@@ -63,10 +63,6 @@ nvidia-cufft-cu12==11.4.1.4
 nvidia-curand-cu12==10.3.10.19
 nvidia-nvjitlink-cu12==12.9.86
 oauthlib==3.3.1
-<<<<<<< HEAD
-=======
-onnxruntime-gpu==1.23.0
->>>>>>> f1488a88af6201c1556201afc596756895f26582
 opentelemetry-api==1.37.0
 opentelemetry-exporter-otlp-proto-common==1.37.0
 opentelemetry-exporter-otlp-proto-grpc==1.37.0
