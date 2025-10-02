@@ -197,6 +197,9 @@ EMAIL=email@example.com
 # Verhindert ein ungewolltes Löschen einer existierenden Datenbank (Auf True setzen um Löschen zu erlauben) 
 CHROMA_REMOVE_OLD=False
 
+# Muss auf True gesetzt sein wenn ChromaDB die Datenbank mit GPU-Unterstützung erstellen soll
+CHROMA_USE_GPU=False
+
 CHROMA_BATCH_SIZE=1000
 CHUNK_MAX_CHARS=1000
 CHUNK_OVERLAP=100
