@@ -27,5 +27,8 @@ def query_db(query: str,n_res: int = settings.CHROMA_N_RESULTS) -> Any:
         query_texts=[query],
         n_results=n_res
     )
-    logger.info(f"Query returned {len(results['ids'][0])} results.")
+    if len(results) ==0:
+        logger.warning("Query returned no results.")
+    else:
+        logger.info(f"Query returned {len(results['ids'][0])} results.")
     return results
