@@ -201,6 +201,13 @@ Fallback
 ```bash
 uv pip install scrapy loguru beautifulsoup4 pydantic pydantic-settings "pydantic[email]" chromadb mcp fastapi "onnxruntime-gpu[cuda,cudnn]"
 ```
+Wichtig: onnxruntime deinstallieren und onnxruntime-gpu installieren, da onnxruntime mit chromadb installiert wird und mit onnxruntime-gpu inkompatibel ist.
+```bash
+uv pip uninstall onnxruntime
+```
+```bash
+uv pip install onnxruntime-gpu==1.23.0
+```
 ## Konfiguration
 Erstelle eine `.env`-Datei im Projektverzeichnis oder setze die Variablen als Umgebungsvariablen.
 
