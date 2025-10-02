@@ -186,7 +186,9 @@ Fallback
 uv pip install scrapy loguru beautifulsoup4 pydantic pydantic-settings "pydantic[email]" chromadb mcp fastapi
 ```
 ### Variante mit GPU-Unterstützung für die erstellung der Embeddings
+[CUDA 12.9](https://developer.nvidia.com/cuda-12-9-0-download-archive) und [cuDNN 9.13](https://developer.nvidia.com/cudnn-9-13-1-download-archive) installieren.<br>
 Passende Version von TensorRT installieren (Nvidia Account wird benötigt)<br>
+https://developer.nvidia.com/tensorrt/download/10x<br>
 Für Windows
 ```bash
 uv pip install -r requirements_gpu_win.txt
